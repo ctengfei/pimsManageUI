@@ -1,0 +1,83 @@
+// base color
+$blue:#324157;
+$light-blue:#3A71A8;
+$red:#C03639;
+$pink: #E65D6E;
+$green: #30B08F;
+$tiffany: #4AB7BD;
+$yellow:#FEC171;
+$panGreen: #30B08F;
+
+// 默认菜单主题风格
+$base-menu-color:#ffffff;
+$base-menu-color-active:#f4f4f5;
+$base-menu-background:#356dee;
+$base-logo-title-color: #1965ED;
+
+$base-menu-light-color:rgba(0,0,0,.70);
+$base-menu-light-background:#ffffff;
+$base-logo-light-title-color: #001529;
+
+$base-sub-menu-background:#1C4EC1;
+$base-sub-menu-hover:#193880;
+
+// 新增
+$main-height: calc(100vh - 60px);// 主框体高度
+$color-font-placeholder: #afb9d0;     //输入框提示文字颜色
+$color-font-basic: #afb9d0;     //基础文字颜色
+$color-font-text-btn: #ffffff;     //次要按钮/文字按钮默认
+$color-font-3: #ccc;
+$color-font-placeholder: #afb9d0;     //输入框提示文字颜色
+$color-font-main: #ffffff;      //次要按钮文字默认
+$color-font-danger: #f05656;      //危险按钮字体色
+$color-font-text-hover: #94f9ff;      //文字按钮悬浮
+$color-font-disabled: #8a91c2;      //文字按钮禁用
+$colot-font-gray: #999999;      // 欢迎信息字体色
+$color-font-yellow: #d1cb68;      // 操作栏黄色
+$color-font-table-header: #206aff;      // 表格表头文字颜色
+$color-font-table-body: #afb9d0;  //表格内容文字颜色
+
+// 距离
+$space-size-max: 80px;
+$space-size-large: 40px;
+$space-size-small: 20px;
+$space-size-mini: 10px;
+
+//文字大小
+$size-font-icon: 20px;
+$size-font-normal: 14px;
+$size-font-small: 12px;
+
+
+
+// 自定义暗色菜单风格
+/**
+$base-menu-color:hsla(0,0%,100%,.65);
+$base-menu-color-active:#fff;
+$base-menu-background:#001529;
+$base-logo-title-color: #ffffff;
+
+$base-menu-light-color:rgba(0,0,0,.70);
+$base-menu-light-background:#ffffff;
+$base-logo-light-title-color: #001529;
+
+$base-sub-menu-background:#000c17;
+$base-sub-menu-hover:#001528;
+*/
+
+$base-sidebar-width: 200px;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+  menuColor: $base-menu-color;
+  menuLightColor: $base-menu-light-color;
+  menuColorActive: $base-menu-color-active;
+  menuBackground: $base-menu-background;
+  menuLightBackground: $base-menu-light-background;
+  subMenuBackground: $base-sub-menu-background;
+  subMenuHover: $base-sub-menu-hover;
+  sideBarWidth: $base-sidebar-width;
+  logoTitleColor: $base-logo-title-color;
+  logoLightTitleColor: $base-logo-light-title-color
+}

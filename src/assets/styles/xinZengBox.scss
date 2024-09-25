@@ -1,0 +1,113 @@
+.xzMain{
+  width: 100% !important;
+  // height: 100% !important;
+  flex: 1;
+}
+.xzBox{
+  margin: 0;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.xzysBox{
+  overflow: hidden !important;
+  // height: 100% !important;
+  background: white !important;
+  box-sizing: border-box !important;
+  padding: 0px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.xzgdBox{
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+// 统计最大的盒子  让其距离下面元素为10px
+.xztongji{
+  width: 100%;
+  margin-bottom: 10px;
+  // 作用  去掉左右的maring值
+  .xztongjiBox{
+    margin: 0 !important;
+    // 去掉第一个col的左边值
+    .el-col:first-child{
+      padding-left: 0!important;
+    }
+    // 去掉最后一个右边值
+    .el-col:last-child{
+      padding-right: 0!important;
+    }
+    // 公共的样式   设置数据框的高度  在父组件引用组件class名
+    //让其上下左右居中
+    .xzmain{
+      background: white;
+      width: 100%;
+      height: 164px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  }
+
+}
+
+.statusMain {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 17px;
+  .tupian {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .wenzi {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    // text-align: center;
+    // line-height: 100%;
+    .shuzi {
+      color: #3e8fff;
+      font-weight: bold;
+      font-size: 28px;
+    }
+    .name {
+      font-size: 14px;
+    }
+  }
+}
+
+::v-deep .el-drawer__header {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e8eaec;
+  span {
+    font-size: 18px;
+
+    font-weight: 600;
+    color: #080808;
+    position: relative;
+    padding-left: 9px;
+    &::before {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0;
+      content: '|';
+    }
+  }
+}

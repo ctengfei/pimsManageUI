@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="27px" height="26px" viewBox="0 0 27 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>事件总数</title>
+    <defs>
+        <rect id="path-1" x="366" y="359" width="504" height="372" rx="2"></rect>
+        <filter x="-2.8%" y="-2.7%" width="105.6%" height="107.5%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.538356294   0 0 0 0 0.644306316   0 0 0 0 0.785495924  0 0 0 0.135920598 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-3" x="382" y="425" width="472" height="78" rx="2"></rect>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="472" height="78" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页面" transform="translate(-563.000000, -451.000000)">
+            <rect id="矩形" fill="#EEF2FB" x="0" y="-2" width="1932" height="1086"></rect>
+            <g id="矩形备份-4">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <use id="矩形" stroke="#388CFF" mask="url(#mask-4)" stroke-width="2" fill="#F3F7FF" stroke-dasharray="4" xlink:href="#path-3"></use>
+            <g id="编组-20" transform="translate(549.000000, 437.000000)">
+                <circle id="椭圆形" fill="#FFFFFF" cx="27" cy="27" r="27"></circle>
+                <g id="事件总数" transform="translate(14.827586, 14.827586)">
+                    <polygon id="路径-7" fill="#649CFB" points="21.5868715 9 18 11.9538446 18 23.8965517 25.4482759 23.8965517 25.4482759 12.2198897"></polygon>
+                    <polygon id="路径" fill="#619AFE" points="24.2068966 0 16.2538668 1.82317394 18.8304144 4.29959906 17.1188564 6.13141651 12.7022297 11.9286323 8.12408457 8.46527651 0 13.5287112 1.39257653 14.8965517 8.13428583 11.1907345 12.7734304 14.7131793 20.2392297 5.65312732 22.8526268 8.16451517"></polygon>
+                    <polygon id="路径-8" fill="#619AFE" points="10 14.3103448 12.7129377 16.8387706 15.5862069 14.3103448 15.5862069 24.3103448 10 24.3103448"></polygon>
+                    <polygon id="路径-9" fill="#5E97FF" points="8.44827586 24.1034483 8.44827586 12 1 16.0318189 1 24.1034483"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

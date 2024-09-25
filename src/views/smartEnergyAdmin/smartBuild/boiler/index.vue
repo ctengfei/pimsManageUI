@@ -1,0 +1,879 @@
+<template>
+  <div class="app-container-bow">
+    <div class="video-web-left-box">
+      <HighlightSquare class="highlight-height-main padding-20">
+        <template v-slot:child>
+          <div class="video-web-left-tree-outer">
+            <!--左侧树-->
+            <!-- 多维树组件 -->
+            <OrgizeTree
+              :districtList="dominList"
+              :isCheck="isCheck"
+              :dominShow="dominShow"
+              :permissionData="permission"
+              @handleNodeDblclick="handleNodeDblclick"
+              @DragEnd="DragEnd"
+              :draggable="draggable"
+              :nodeType='nodeType'
+               @treeId="treeId"
+              @getTableData="getTableData"/>
+          </div>
+        </template>
+      </HighlightSquare>
+
+    </div>
+    <div class="video-web-right-box-top">
+      <comCard class="card-wrap" :spanList='spanList' @routerClick="routerClick($event)"></comCard>
+    </div>
+    <div class="video-web-right-box-bottom">
+      <!-- 搜索 -->
+      <el-form
+        :inline="true"
+        ref="serForm"
+        :model="form"
+        class="demo-form-inline forms"
+      >
+        <el-form-item prop="name">
+          <el-input
+            v-model="form.name"
+            placeholder="请输入锅炉房名称"
+            style="width: 200px"
+            clearable
+            @keyup.native.enter="search"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            icon="el-icon-search"
+            @click="search()"
+            type="primary"
+          >搜索
+          </el-button
+          >
+          <el-button
+            icon="el-icon-refresh-left"
+            @click="reset()"
+            plain
+          >重置
+          </el-button
+          >
+        </el-form-item>
+        <el-form-item style="float: right;margin-right:0px;">
+          <el-button
+            type="primary"
+            icon="el-icon-refresh"
+            @click="refreshs"
+          >一键刷新
+          </el-button
+          >
+        </el-form-item>
+      </el-form>
+ 
+      <!-- 表格 -->
+      <el-card class="box-card table-padding">
+        <HighlightSquare>
+          <template v-slot:child>
+            <div class="photoBox" v-if="tableData && tableData.length">
+              <div class="groups" v-for="(item,index) in tableData" :key="item.id" >
+                <div class="imgTitle">
+                  <h4>{{item.deviceName}}</h4>
+                  <div class="gifs">
+                    <img class="" :src="require(`@/assets/images/smartBuild/boiler.gif`)" alt="item.type"/>
+                  </div>
+                </div>
+                <div class="infomation">
+                  <h4 style="text-align:center;">设备运行状态</h4>
+                  <div v-for="items in item.pointRunDataList">
+                    <div>
+                      <span v-show="items.pointType=='boiler_run'">
+                        <span class="pointName">{{items.pointName}}</span>
+                        <span class="bgCond bgSucc">{{items.dataValue == 'true' ? '开机' : '关机'}}</span>
+                      </span>
+                      <span
+                        v-show="items.pointType.indexOf('temperature') != -1 || items.pointType.indexOf('Temperature') != -1 ">
+                      <span class="pointName">{{items.pointName}}</span>
+                      <span class="bgCond">{{items.dataValue}}{{'℃'}}</span>
+                      </span>
+                      <span v-show="items.pointType=='boiler_vacuumPressure'">
+                      <span class="pointName">{{items.pointName}}</span>
+                      <span class="bgCond">{{items.dataValue}}{{'MPa'}}</span>
+                      </span>
+                      <span v-if="items.pointType=='boiler_fault'"
+                            :style="{'visibility':items.pointType=='boiler_fault'?'hidden':'' }">
+                      </span>
+                      <span v-show>
+                             <span class="pointName">{{items.pointName}}</span>
+                             <span class="bgCond">{{items.dataValue}}</span>
+                      </span>
+
+                    </div>
+                  </div>
+                  <span>
+                    <span class="pointName">故障</span>
+                    <span class="bgCond"  :style="{'background-color': item.dataFault ? '#00e984' : '#ff403d' }" style="color: #000" >{{item.dataFault?'正常':'故障'}}</span>
+                  </span>
+                  <span>
+                        <span class="pointName">附近摄像头</span>
+                        <span class="bgCond">
+                        <img class="" :src="require(`@/assets/images/smartBuild/sxt.png`)" @click="oncamera(item.monitorVos)"/></span>
+                      </span>
+                </div>
+
+              </div>
+            </div>
+            <div v-else style="text-align:center;margin-top:180px">
+              <div class="el-table__empty-text"  style="margin:0 auto;color:white;font-size:20px;">暂无数据</div>
+            </div>
+          </template>
+        </HighlightSquare>
+      </el-card>
+    </div>
+    <div v-show="crameShow" class="crameShow">
+    </div>
+    <div v-show="crameShow" class="crameShowMask">
+        <div class="close">
+            <svg-icon icon-class="icon-guanbi" style="height: 30px;width: 16px;"  @click="onclose"/>
+            <div class="icon-name"></div>
+        </div>
+        <div class="vedioShow">
+          <div id="vedioShow"></div>
+        </div>
+    </div>
+  </div>
+</template>
+<script>
+  import HighlightSquare from "@/components/HighlightSquare";
+  import sysTree from "@/components/sysTree";
+  import pagination from '@/components/comPagination'
+  import OrgizeTree from '@/components/orgnizeTree'
+  import {treeData, getDeviceInfoById, getIvsPlayer, getDeviceCriteria} from '@/api/system/organization'
+  import comCard from "@/components/comCard"
+  import {getObjByKey, getStringByKey} from "@/utils/voice.js";
+  import $smartBuild from "@/api/smartBuild"
+
+  export default {
+    components: {sysTree, HighlightSquare, pagination, OrgizeTree, comCard},
+    data() {
+      return {
+        ruleForm: {
+          pass: '',
+          checkPass: '',
+          age: '',
+          switch: true
+        },
+        permission: {
+          deviceTree: 'monitor::splitscreen::deviceTree',
+          deviceCriteria: 'monitor::splitscreen::deviceCriteria',
+          treeCheck: 'tree::check',
+          collectDevice: 'collectTag::device',
+          collectDelete: 'collectTag::delete',
+          collectCheck: 'collecttag::check',
+          statistics: 'smartBuild::elevator::searchnum',
+          searchDevice: 'smartBuild::intellectCondite::searchDevice'
+        },
+        dominList: [],
+        draggable: true,
+        districtList: [],
+        tagNode: {},
+        isCheck: '',
+        nodeType: 'boiler',
+        isShow: true,
+        dominShow: true,
+        treeData: [],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        total: 0,
+        form: {
+          name: "",
+          type: 'BOILER',
+          pageNum: 1,
+          pageSize: 12,
+        },
+        TypeArr: [
+          {value: 0, label: "不限"},
+          {value: 1, label: "名称"},
+        ],
+        tableData: [],
+        selectedIds: [],
+        spanList: [
+          {
+            type: "total",
+            num: 0,
+            name: "锅炉房总数",
+            path: require(`@/assets/images/smartBuild/gl1.png`),
+          },
+          {
+            type: "off-line",
+            num: 0,
+            name: "锅炉房开启",
+            path: require(`@/assets/images/smartBuild/gl2.png`),
+          },
+          {
+            type: "off-line",
+            num: 0,
+            name: "锅炉房关闭",
+            path: require(`@/assets/images/smartBuild/gl3.png`),
+      },
+          {
+            type: "normal",
+            num: 0,
+            name: "锅炉房故障",
+            path: require(`@/assets/images/smartBuild/gl4.png`),
+          },
+          {
+            type: "warning",
+            num: 0,
+            name: "锅炉房报警",
+            path: require(`@/assets/images/smartBuild/gl5.png`),
+          },
+        ],
+        crameShow:false,
+        rtspUrl:'',
+        widowWidth: window.screen.width,
+        widowHeight: window.screen.width,
+        vedioTop:'',
+        vedioLeft:'',
+        vedioWidth:'',
+        vedioHeight:'',
+        deviceZoom:''
+      };
+    },
+    watch: {
+      widowWidth (val) {
+        let that = this;
+        console.log('实时屏幕宽度', val, that.widowWidth)
+        that.$nextTick(()=>{
+            that.windowWidth = val
+        })
+        
+        },
+        widowHeight (val) {
+        let that = this;
+        console.log('实时屏幕高度', val, that.widowHeight)
+        that.$nextTick(()=>{
+            that.windowWidth = val
+        })
+        },
+        vedioTop (val) {
+        let that = this;
+        console.log('播放器X', val, that.vedioTop)
+        that.$nextTick(()=>{
+            that.vedioTop = val
+        })
+        },
+        vedioLeft (val) {
+        let that = this;
+        console.log('播放器Y', val, that.vedioLeft)
+        that.$nextTick(()=>{
+            that.vedioLeft = val
+        })
+        },
+        vedioWidth (val) {
+        let that = this;
+        console.log('播放器高度', val, that.vedioWidth)
+        that.$nextTick(()=>{
+            that.vedioWidth = val
+        })
+        },
+        vedioHeight (val) {
+        let that = this;
+        console.log('播放器高度', val, that.vedioHeight)
+        that.$nextTick(()=>{
+            that.vedioHeight = val
+        })
+        },
+        deviceZoom(val){
+        let that = this;
+        console.log('放大率', val, that.deviceZoom)
+        that.$nextTick(()=>{
+            that.deviceZoom = val
+            
+        })
+        }
+    },
+    mounted() {
+      this.getStatistics();
+      // this.getDeviceStatus(this.form)
+      let _this = this;
+        _this.deviceZoom = window.devicePixelRatio
+        
+        window.onresize = ()=>{
+          window.fullHeight = window.screen.height;
+          window.fullWidth = window.screen.width;
+          _this.widowHeight = window.fullHeight;
+          _this.widowWidth = window.fullWidth;
+        }
+    },
+    methods: {
+      // 播放视频
+      oncamera(item){
+        console.log(item)
+        let _this = this
+        _this.crameShow=true
+        var box=document.getElementById('vedioShow'); 
+        _this.vedioTop = box.getBoundingClientRect().top + 110;
+        _this.vedioLeft = box.getBoundingClientRect().left + 60;
+        _this.vedioWidth = box.getBoundingClientRect().width - 50;
+        _this.vedioHeight = box.getBoundingClientRect().height - 60;
+        let str0 = {"cmd":"create_control","html_x": window.screenLeft,"html_y": window.screenTop,"html_w":_this.widowWidth,"html_h":_this.widowHeight,"e_type":"Chrome","title":document.title,"time":"2020-08-17 00:00:00.000","cmd_id":"001_1"}
+        _this.$store.state.socket.Csock.send(JSON.stringify(str0))
+        let str2 = {"cmd":"set_pos","x": window.screen.width / 3.5,"y": window.screen.height / 3.5,"w": 750,"h": 450,"id":"001","time":"2020-08-17 00:00:00.000","cmd_id":"001_1"}
+        _this.$store.state.socket.Csock.send(JSON.stringify(str2))
+        let str1 = {"cmd":"set_layout","id":"001","layout":1,"time":"2020-08-17 00:00:00.000","cmd_id":"001_1"}
+        _this.$store.state.socket.Csock.send(JSON.stringify(str1))
+        let str = {"cmd":"show","id":"001","time":"2020-08-17 00:00:00.000","cmd_id":"001_1 "}
+        _this.$store.state.socket.Csock.send(JSON.stringify(str))
+        let data = {
+            "cameraCode": item[0].code,
+            "mediaURLParam": {
+                "broadCastType": 0,
+                "packProtocolType": 1,
+                "protocolType": 2,
+                "serviceType": 1,
+                "streamType": 2,
+                "transMode": 0
+            }
+        }
+        getIvsPlayer('/sm/ivs/player/play','POST',data).then(res => {
+            if(res.meta.status == 200){
+                _this.rtspUrl = res.data.rtspURL
+                // this.referenceIdArr.
+                if(res.data.description == "成功"){
+                    let str3 = {"cmd":"play_real","id":"001","time":"2020-08-17 00:00:00.000","camera_id": _this.rtspUrl,"camera_name":"摄像头","wnd_index":0,"cmd_id":"001_1 "}
+                    _this.$store.state.socket.Csock.send(JSON.stringify(str3))
+                }else{
+                    this.$message.info(res.data.description)
+                }
+            }
+        })
+        // .catch(err => {
+        //     this.$message.error(err)
+        // })
+      },
+      // 关闭视频播放
+      onclose(){
+          this.crameShow=false
+          let str1 = `{"cmd":"destroy","id":"001","time":"2020-08-17 00:00:00.000","cmd_id":"001_1 "}`
+          this.$store.state.socket.Csock.send(str1)
+      },
+      treeId(data) {
+        this.form.nodeId = data;
+        this.getDeviceStatus(this.form);
+      },
+      getStatistics() {
+        let obj = getObjByKey(this.permission.statistics)
+        let data = {
+          type: 'BOILER'
+        };
+        $smartBuild.getStatistics(obj, data).then(res => {
+          if (res.meta.status === 200) {
+            this.spanList[0].num = res.data.deviceNum
+            this.spanList[1].num = res.data.deviceOpenNum
+            this.spanList[2].num = res.data.deviceCloseNum
+            this.spanList[3].num = res.data.deviceFaultNum
+            this.spanList[4].num = res.data.deviceAlarmNum
+          }
+        })
+      },
+      // card事件 routerClick
+      routerClick(item) {
+        console.log(item)
+      },
+      // 获取设备状态
+      getDeviceStatus(data) {
+        let obj = getObjByKey(this.permission.searchDevice)
+        $smartBuild.getDeviceStatus(obj, data).then(res => {
+          if (res.meta.status === 200) {
+            this.tableData = res.data.data;
+            this.total = res.data.total;
+            res.data.data.forEach(item => {
+              let res = item.pointRunDataList.filter(items => {
+                return items.pointType == "boiler_fault"
+              });
+              let dataFault = res.every(ress => ress.dataValue == '0')
+              this.$set(item, 'dataFault', dataFault);
+            })
+          } else {
+            this.$message.error(res.meta.message)
+          }
+        })
+      },
+      //  获取设备信息
+      getDeviceData(data) {
+        if (!data.children) {
+          if (!data.code) {
+            if (this.isType === 'click') {
+              let tempObj = [{
+                deviceId: data.id,
+                deviceName: data.name
+              }]
+              this.handleleftClick(tempObj)
+            } else if (this.isType === 'dbClick') {
+              const player = {
+                deviceId: data.deviceId,
+                deviceName: data.name
+              }
+              this.goVideoControl(player)
+            }
+            return
+          }
+          getDeviceInfoById(data.code)
+            .then(res => {
+              if (res.meta.status === 200) {
+                if (this.isType === 'click') {
+                  this.handleleftClick(res.data)
+                } else if (this.isType === 'dbClick') {
+                  if (res.data[0]) {
+                    const player = {
+                      deviceId: res.data[0].deviceId,
+                      // channelId: res.data[0].channelId,
+                      deviceName: res.data[0].name,
+                      protocol: res.data[0].protocol
+                    }
+                    this.goVideoControl(player)
+                  }
+                } else if (this.isType === 'drag') {
+                  this.players[this.dragIndex].deviceId = res.data[0].deviceId
+                  this.players[this.dragIndex].deviceName = res.data[0].name
+                  this.players[this.dragIndex].protocol = res.data[0].protocol
+                } else {
+                  this.$message.error('获取设备信息失败')
+                }
+              }
+            })
+            .catch(err => {
+              console.log(err, 'err')
+            })
+        }
+      },
+      // 左侧设备树双击
+      handleNodeDblclick(data) {
+        this.isType = 'dbClick'
+        this.getDeviceData(data)
+      },
+      // 左侧设备树拖拽
+      DragEnd(node, prenode, pis, evt) {
+        this.clientX = evt.clientX
+        this.clientY = evt.clientY
+        this.isType = 'drag'
+        for (let i = 0; i < this.distance.length; i++) {
+          if (
+            this.clientX > this.distance[i].toLeft &&
+            this.clientX < this.distance[i].toRight &&
+            (this.clientY + this.scrollTop > this.distance[i].toTop &&
+              this.clientY + this.scrollTop < this.distance[i].toBottom)
+          ) {
+            // 调用接口获取视频流
+            this.dragIndex = i
+            this.getDeviceData(node.data)
+          }
+        }
+      },
+      //  点击左侧通道树
+      handleleftClick(data) {
+        const res = data[0]
+        if (res) {
+          let obj = getObjByKey(this.permission.deviceCriteria)
+          let params = {
+            mounted: true,
+            blurryType: 'DEVICE_TREE',
+            nodeId: data.deviceId,
+            type: this.nodeType
+          }
+          getDeviceCriteria(obj.url, obj.method, params).then(rs => {
+            if (rs.meta.status === 200) {
+              console.log("rs====", rs)
+              //            this.tableData=rs.data.data
+              this.getIvsPlayer(rs.data.data[0].code)
+            } else {
+              this.$message({
+                message: res.meta.message,
+                type: 'error'
+              })
+            }
+          })
+          //        const player = this.players[this.playerIdx]
+          //        player.deviceId = res.deviceId
+          //        player.protocol = res.protocol
+          //        if(res.name){
+          //          player.deviceName = res.name
+          //        }else{
+          //          player.deviceName = res.deviceName
+          //        }
+          //        this.setPlayerIdx(this.playerIdx + 1)
+        }
+      },
+      // 通道列表点击选择通道
+      handleClickChannel(data, index) {
+        const player = this.players[index]
+        player.deviceId = data.deviceId
+        player.deviceName = data.name
+        player.protocol = data.protocol
+        this.workspaceDeviceCounts++
+      },
+      // 获取树组件数据
+      async getTreeData() {
+        if (this.domainCode != "") {
+          let url = this.$store.getters.btnpremissAll[this.permission.deviceTree].url
+          let method = this.$store.getters.btnpremissAll[this.permission.deviceTree].method
+          getDeviceTree(url, method, this.domainCode)
+            .then(res => {
+              this.dominList = res.data
+            })
+            .catch(err => {
+              this.$message.error(err)
+            })
+        } else {
+          let url = this.$store.getters.btnpremissAll[this.permissionData.treeCheck].url
+          let method = this.$store.getters.btnpremissAll[this.permissionData.treeCheck].method
+          const res = await treeData(url, method, [])
+          if (res.meta.status === 200) {
+            this.districtList = res.data
+            this.dominList = res.data
+          } else {
+            this.$message.error('获取区域数据失败')
+          }
+        }
+      },
+      getTableData(data, activeName) {
+        this.tagNode = data
+        // this.isType = 'click'
+        // if ('type' in data === false) {
+        //   let obj = {...data, type: 'IPC', code: data.deviceId}
+        //   this.getDeviceData(obj)
+        // }
+        // this.getDeviceData(data)
+        this.form.nodeId = data.id;
+        this.getDeviceStatus(this.form);
+      },
+      // 开启
+      openDialog() {
+
+      },
+      // 关闭
+      closeDia() {
+
+      },
+
+      handleCurrentChange() {
+        this.getDeviceStatus(this.form);
+      },
+      // 搜索
+      search() {
+        this.getDeviceStatus(this.form);
+      },
+      // 重置
+      reset() {
+        this.$refs['serForm'].resetFields();
+        this.getDeviceStatus(this.form);
+      },
+      // 刷新
+      refreshs() {
+        window.location.reload()
+      }
+    },
+  };
+</script>
+
+<style lang="scss" scoped>
+  ::v-deep .el-switch__label {
+    position: absolute;
+    display: none;
+    font-size: 14px !important;
+    color: #fff !important;
+  }
+
+  ::v-deep .el-switch__label * {
+    font-size: 14px !important;
+  }
+
+  /*打开时文字位置设置*/
+  ::v-deep .el-switch__label--right {
+    z-index: 1;
+    left: 0px; // 这里是重点
+    top: 0.5px;
+  }
+
+  /*关闭时文字位置设置*/
+  ::v-deep .el-switch__label--left {
+    z-index: 1;
+    right: 0px; // 这里是重点
+    top: 0.5px;
+  }
+
+  /*显示文字*/
+  ::v-deep .el-switch__label.is-active {
+    display: block;
+  }
+
+  ::v-deep .el-switch .el-switch__core {
+    border-color: #00e984 !important;
+    background-color: #00e984 !important;
+  }
+
+  ::v-deep .el-switch.is-checked .el-switch__core {
+    border-color: #206aff !important;
+    background-color: #206aff !important;
+  }
+
+  ::v-deep .el-switch__core {
+    width: 60px !important;
+    height: 22px;
+    border: 2px solid #DCDFE6;
+    border-radius: 13px;
+  }
+
+  // ::v-deep .el-switch {
+  //   width: 50%;
+  // }
+  ::v-deep .el-form-item--small .el-form-item__label {
+    line-height: 30px !important;
+  }
+
+  ::v-deep .el-form-item--small .el-form-item__content {
+    line-height: 30px !important;
+  }
+
+  .margin0 {
+    margin-bottom: 5px;
+    text-align: center
+  }
+
+  .bgCond {
+    display: inline-block;
+    width: 70px;
+    height: 27px;
+    border-radius: 5px;
+    background: #313448;
+    cursor: pointer;
+  }
+
+  .bgSucc {
+    background: #00e984;
+    color: #000
+  }
+
+  .el-form-item
+  .app-container {
+    background-color: transparent;
+  }
+
+  .top-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: 0px !important;
+    justify-content: space-between;
+    .total {
+      border-radius: 5px;
+      background-color: #202230;
+      margin-right: 6%;
+      height: 100px;
+    }
+    .off-line {
+      border-radius: 5px;
+      background-color: #202230;
+      margin-right: 6%;
+      height: 100px;
+    }
+    .normal {
+      border-radius: 5px;
+      background-color: #202230;
+      margin-right: 6%;
+      height: 100px;
+    }
+    .exception {
+      border-radius: 5px;
+      background-color: #202230;
+      margin-right: 0%;
+      height: 100px;
+    }
+  }
+
+  .table-padding {
+    padding: 0px 20px 0px 20px;
+  }
+
+  .photoBox {
+    width: 100%;
+    height: calc(100vh - 280px);
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+    .photpItem {
+      text-align: center;
+      width: 12%;
+      height: 230px;
+      background-color: #313448;
+      border-radius: 10px;
+      padding: 10px;
+      color: white;
+      margin-right: 4.6%;
+      margin-bottom: 20px;
+      position: relative;
+      img {
+        border-radius: 3px;
+      }
+      .content {
+        padding: 10px 5px;
+        font-size: 14px;
+        position: relative;
+        .check {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+        }
+        ::v-deep .el-checkbox__label {
+          display: none;
+        }
+      }
+      .clickButton {
+        width: 95%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        position: absolute;
+        bottom: 0;
+        border-top: 1px solid #5e70ec;
+        button {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+
+  .content-Text {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    float: left;
+  }
+
+  .rightSpan {
+    float: right;
+    margin-top: 16px;
+    width: 40%;
+    height: 75px;
+    color: rgba(0, 0, 0, 0.16);
+    opacity: 0.8;
+  }
+
+  .groups {
+    display: flex;
+    justify-content: space-around;
+    // height: 100%;
+    width: 100%;
+    background-color: #272937;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .imgTitle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      margin: 10px 0;
+      .gifs {
+        display: flex;
+        width: 45vw;
+        height: auto;
+        img {
+          width: 100%;
+          margin: 0 auto;
+        }
+      }
+    }
+    .infomation {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+      margin: 20px 20px 20px 0;
+      border-left: 1px solid rgba(255, 255, 255, .1);
+      padding-left: 50px;
+
+    }
+  }
+
+  .pointName {
+    float: left;
+    line-height: 32px;
+    color: #afb9d0;
+    font-size:14px;
+  }
+
+  .bgCond {
+    display: inline-block;
+    width: 50%;
+    height: 27px;
+    border-radius: 5px;
+    background-color: #313448;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 27px;
+    text-align: center;
+    color: #afb9d0;
+    margin-bottom: 20px;
+    img {
+      width: 25px;
+      height: 25px;
+    }
+  }
+
+  .bgSucc {
+    background-color: #00e984 !important;
+    color: #000;
+    margin-left: 10px;
+  }
+
+  .forms {
+    padding: 20px 20px 0 20px
+  }
+.vedioShow{
+    margin:0 auto;
+    width: 750px;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+#vedioShow{
+    width: 750px;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.crameShow{
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:99999;
+    left: 30%;
+    top: 30%;
+}
+.crameShowMask{
+    position:fixed;
+    left:0;
+    top:0;
+    background:rgba(0,0,0,.9);
+    width:100vw;
+    height:100vh;
+    z-index:9999;
+}
+.close{
+    position: fixed;
+    right: 31px;
+    top: 16px;
+    cursor: pointer;
+}
+
+</style>

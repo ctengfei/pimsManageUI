@@ -1,0 +1,135 @@
+.search-detail-box {
+  position: absolute;
+  z-index: 50;
+  right: 20px;
+  top: 20px;
+  display: flex;
+}
+
+// 搜索控件
+.search-control {
+  margin-right: 15px;
+
+  .el-autocomplete {
+    width: 380px !important;
+    box-shadow: 1px 3px 4px -2px #535357;
+  }
+
+  ::v-deep .el-input-group__append,
+  .el-input-group__prepend {
+    width: 55px !important;
+  }
+
+  ::v-deep .el-input-group--append .el-input__inner {
+    height: 35px !important;
+    line-height: 35px !important;
+  }
+}
+
+.search-poi-list {
+  display: flex;
+  position: relative;
+  left: -10px;
+
+  .poi-addr {
+    color: darkgray;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// 详情按钮
+.detail-button {
+  z-index: 50;
+  background: #ffffff;
+  border-radius: 3px;
+  opacity: 0.81;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 42px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  box-shadow: 1px 3px 4px -2px #535357;
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 60px;
+  }
+
+  img {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  i {
+    font-size: 16px;
+    font-weight: 700;
+    color: #535357;
+    cursor: pointer;
+  }
+
+  .el-button {
+    font-size: 16px;
+    font-weight: 400;
+    color: #535357;
+  }
+
+  .el-divider--vertical {
+    width: 1px;
+    height: 33px;
+    background: #EDEBF0;
+  }
+}
+
+// 测量控件
+.measure-button {
+  position: absolute;
+  z-index: 50;
+  left: 10px;
+  top: 20px;
+  box-sizing: border-box;
+
+  .measure-box {
+    background: #ffffff;
+    padding: 5px;
+    margin-bottom: 8px;
+    border-radius: 3px;
+    box-shadow: 1px 3px 4px -2px #535357;
+  }
+
+  img {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin: 0 auto;
+  }
+
+  .el-divider--horizontal {
+    width: 100%;
+    background: #EDEBF0;
+    margin: 5px 0;
+  }
+
+  .icons {
+    color: #535357;
+    text-align: center;
+    font-size: 14px;
+
+    i {
+      cursor: pointer;
+      font-weight: 700;
+    }
+  }
+}
+.el-input-group__append .el-select, 
+.el-input-group__append .el-button, 
+.el-input-group__prepend .el-select, 
+.el-input-group__prepend .el-button {
+  display: inline-block;
+  margin: -5px -5px;
+}

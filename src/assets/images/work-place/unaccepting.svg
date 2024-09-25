@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="69px" height="66px" viewBox="0 0 69 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>受理</title>
+    <defs>
+        <linearGradient x1="-10.170173%" y1="23.2831529%" x2="56.5507282%" y2="19.284149%" id="linearGradient-1">
+            <stop stop-color="#D8EBFE" offset="0%"></stop>
+            <stop stop-color="#CFE7FD" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="15" width="61" height="45" rx="1"></rect>
+        <filter x="-11.5%" y="-11.1%" width="123.0%" height="131.1%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.847058824   0 0 0 0 0.921568627   0 0 0 0 0.996078431  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="133.896713%" id="linearGradient-4">
+            <stop stop-color="#A3D1FE" offset="0%"></stop>
+            <stop stop-color="#359AFF" offset="100%"></stop>
+        </linearGradient>
+        <filter x="0.0%" y="0.0%" width="100.0%" height="100.0%" filterUnits="objectBoundingBox" id="filter-5">
+            <feGaussianBlur stdDeviation="0" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <linearGradient x1="4.61357756%" y1="48.9795918%" x2="93.9818391%" y2="51.0204082%" id="linearGradient-6">
+            <stop stop-color="#3299FF" offset="0%"></stop>
+            <stop stop-color="#D6EAFD" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页面改版四" transform="translate(-669.000000, -218.000000)">
+            <g id="受理" transform="translate(673.000000, 218.000000)">
+                <path d="M9.00348641,6.92309286 L40.7071137,6.92309286 C41.2593985,6.92309286 41.7071137,7.37080811 41.7071137,7.92309286 L41.7071137,32.3394494 C41.7071137,32.8917341 41.2593985,33.3394494 40.7071137,33.3394494 L9.00348641,33.3394494 C8.45120166,33.3394494 8.00348641,32.8917341 8.00348641,32.3394494 L8.00348641,7.92309286 C8.00348641,7.37080811 8.45120166,6.92309286 9.00348641,6.92309286 Z" id="矩形" fill="url(#linearGradient-1)" transform="translate(24.855300, 20.131271) rotate(32.000000) translate(-24.855300, -20.131271) "></path>
+                <g id="矩形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-2"></use>
+                </g>
+                <rect id="矩形" fill="url(#linearGradient-4)" filter="url(#filter-5)" x="5" y="15" width="51" height="40" rx="1"></rect>
+                <path d="M36.0102784,11.3733165 L33.1687463,9.7914549 L10.7754785,8.19627167 C8.22547532,7.67011144 6.96719904,8.20183919 7.00064968,9.7914549 C7.03410032,11.3810706 7.03410032,13.1172523 7.00064968,15 L56,15 L36.0102784,11.3733165 Z" id="路径-5" fill="url(#linearGradient-6)"></path>
+                <g id="公章盖章" transform="translate(19.000000, 22.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                    <path d="M3.41176471,18.4319249 L22.3529412,18.4319249 C24.2352941,18.3098592 25.8823529,19.7746479 26,21.7276995 L26,25.1455399 C26,25.7558685 25.1764706,26 24.5882353,26 L1.41176471,26 C0.823529412,25.8779343 0,25.6338028 0,25.0234742 L0,21.6056338 C0.117647059,19.7746479 1.76470588,18.3098592 3.52941176,18.3098592 L3.41176471,18.4319249 Z M12.9411765,0 C16.1176471,0 18.8235294,2.56338028 18.8235294,5.85915493 L18.8235294,6.10328638 C18.7058824,8.17840376 17.6470588,10.0093897 15.8823529,11.1079812 L15.8823529,11.5962441 C15.5294118,11.9624413 15.4117647,12.4507042 15.4117647,12.9389671 L15.4117647,13.5492958 C15.4117647,14.2816901 15.2941176,14.8920188 15.8823529,15.5023474 L15.8823529,15.6244131 L16.1176471,15.6244131 C17.0588235,15.7464789 17.7647059,16.4788732 17.8823529,17.4553991 L8.23529412,17.4553991 C8.35294118,16.4788732 9.05882353,15.7464789 10,15.6244131 L10.2352941,15.6244131 L10.2352941,15.5023474 C10.5882353,15.1361502 10.7058824,14.6478873 10.7058824,14.1596244 L10.7058824,13.5492958 C10.7058824,12.8169014 10.8235294,12.2065728 10.2352941,11.5962441 L10.2352941,11.1079812 C8.23529412,10.0093897 7.05882353,7.9342723 7.05882353,5.85915493 L7.05882353,5.61502347 C7.17647059,2.44131455 9.76470588,0 12.9411765,0 Z" id="形状"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

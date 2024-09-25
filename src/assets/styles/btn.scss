@@ -1,0 +1,210 @@
+@import './variables.scss';
+
+@mixin colorBtn($color) {
+  background: $color;
+
+  &:hover {
+    color: $color;
+
+    &:before,
+    &:after {
+      background: $color;
+    }
+  }
+}
+
+.blue-btn {
+  @include colorBtn($blue)
+}
+
+.light-blue-btn {
+  @include colorBtn($light-blue)
+}
+
+.red-btn {
+  @include colorBtn($red)
+}
+
+.pink-btn {
+  @include colorBtn($pink)
+}
+
+.green-btn {
+  @include colorBtn($green)
+}
+
+.tiffany-btn {
+  @include colorBtn($tiffany)
+}
+
+.yellow-btn {
+  @include colorBtn($yellow)
+}
+
+.pan-btn {
+  font-size: 14px;
+  color: #fff;
+  padding: 14px 36px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  transition: 600ms ease all;
+  position: relative;
+  display: inline-block;
+
+  &:hover {
+    background: #fff;
+
+    &:before,
+    &:after {
+      width: 100%;
+      transition: 600ms ease all;
+    }
+  }
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    transition: 400ms ease all;
+  }
+
+  &::after {
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
+  }
+}
+
+.custom-button {
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fff;
+  color: #fff;
+  -webkit-appearance: none;
+  text-align: center;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+// base color
+$blue:#324157;
+$light-blue:#3A71A8;
+$red:#C03639;
+$pink: #E65D6E;
+$green: #30B08F;
+$tiffany: #4AB7BD;
+$yellow:#FEC171;
+$panGreen: #30B08F;
+
+
+// sidebar
+$menuText:#243251;
+$menuActiveText:#409EFF;
+$subMenuActiveText:#f4f4f5; // https://github.com/ElemeFE/element/issues/12951
+$subMenuActiveBg:#2c66ff;
+$subMenuActiveBd:#2c66ff;
+
+$menuBg:transparent;
+$menuHover:#409EFF;
+
+$subMenuBg:#409EFF;
+$subMenuHover:#409EFF;
+
+$sideBarWidth: 260px;
+$sideBarHeight: 60px;
+$tableTr:60px;
+$btnWidth:73px;
+$btnHeight:32px;
+$inputWidth:auto;
+$inputHeight:32px;
+$btnsmallWidth:100px;
+$btnsmallHeight:40px;
+
+// 背景色
+$color-normal: #1890ff;     //normal状态
+$color-normal-hover: #46a6ff;     //normal悬浮状态
+$color-success: #18dca7;      //success状态
+$color-warning: #eeda5b;      //warning状态
+$color-danger: #f05656;     //danger状态
+// $color-disabled: #474c6e;      //禁用状态
+$color-disabled: rgba(255,255,255,.04);      //禁用状态
+$color-plain-bg: #313448;     //次要按钮背景色
+$color-message-bg: #05203d;     //消息背景色
+
+$size-border-radius: 4px; // 按钮圆角尺寸
+/**
+** 弹窗/提示框
+**/
+$deepBlue: #202230;
+$dialog-border-color: #313449;
+// 文字颜色
+$color-font-basic: #afb9d0;     //基础文字颜色
+$color-font-text-btn: #ffffff;     //次要按钮/文字按钮默认
+$color-font-3: #ccc;
+$color-font-placeholder: #afb9d0;     //输入框提示文字颜色
+$color-font-main: #ffffff;      //次要按钮文字默认
+$color-font-danger: #f05656;      //危险按钮字体色
+$color-font-text-hover: #94f9ff;      //文字按钮悬浮
+$color-font-disabled: #8a91c2;      //文字按钮禁用
+$colot-font-gray: #999999;      // 欢迎信息字体色
+$color-font-yellow: #d1cb68;      // 操作栏黄色
+$color-font-table-header: #206aff;      // 表格表头文字颜色
+$color-font-table-body: #afb9d0;  //表格内容文字颜色
+
+//文字大小
+$size-font-icon: 20px;
+$size-font-normal: 12px;
+$size-font-small: 12px;
+
+// 边框颜色
+$color-border-container: #5e70ec;   //边框容器/分割线颜色
+$color-border-2: #313448;
+$color-border-table-split: #254a9f;     //表格分割线
+$color-border-radio: #dcdfe5;     //单选框/复选框默认颜色
+$color-border-input: #206aff;     //输入框默认状态颜色
+$color-border-dialog: rgba(8,229,242,0.4);     //弹框边框
+
+// 距离
+$space-size-max: 80px;
+$space-size-large: 40px;
+$space-size-small: 20px;
+$space-size-mini: 10px;
+
+// 分屏按钮样式
+.video-web-splitscreen-btn {
+  &.el-button--small {
+    font-size: $size-font-normal;
+    // color: $color-font-disabled;
+    padding: 6px 10px;
+    border-radius: 2px;
+    border: solid 2px $color-normal;
+    background-color: transparent;
+  }
+  // &.el-button:focus, &.el-button:hover {
+  //   color: $color-font-text-btn;
+  //   background-color: $color-normal;
+  // }
+}
+// 分屏按钮选中样式
+.video-web-splitscreen-btn-active {
+  &.el-button--small {
+    font-size: $size-font-normal;
+    color: $color-font-text-btn;
+    padding: 6px 10px;
+    border-radius: 2px;
+    border: solid 2px $color-normal;
+    background-color: $color-normal;
+  }
+}
